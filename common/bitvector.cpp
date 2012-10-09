@@ -1,4 +1,5 @@
 #include <cassert>
+#include <stdlib.h>
 #include "bitvector.h"
 
 void bitvector::resize(size_t numBits, bool defaultValue)
