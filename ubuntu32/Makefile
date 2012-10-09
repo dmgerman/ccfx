@@ -1,3 +1,9 @@
+default: all
+
+all:
+	echo 'Done'
+
+
 clean:
 	rm -rf ccfx libpicosellib.so picosel
 	rm -rf scripts/easytorq.so
@@ -7,6 +13,3 @@ clean:
 	rm -rf lib_CCFinderXLib.so
 	rm -rf scripts/utility.pyc
 
-
-all:
-	echo 'Done'
