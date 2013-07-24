@@ -1,0 +1,32 @@
+* CCFinder 
+
+This is my attempt to provide life support to ccfinder. I have
+collected its source code, and the great work that Nic
+Bettenburg documenting how to build it under Linux. 
+
+** Requirements
+
+The easiest way is to build it under Ubuntu linux: you need the following libraries:
+
+- libboost-dev 
+- libboost-thread-dev 
+- libpython3-all-dev
+- libicu-dev 
+- openjdk-7-jdk 
+
+
+Now, make an offering to the make goods (good options are  Vishwakarma and Vulcan)
+
+Run 
+
+   cmake CMakeLists.txt 
+
+and if succesful run:
+
+
+
+  
+
+
+
+
