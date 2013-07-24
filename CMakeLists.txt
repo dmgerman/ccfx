@@ -1,5 +1,10 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
+if(POLICY CMP0013 )
+   cmake_policy(SET CMP0013 OLD) # or even better, NEW
+endif(POLICY CMP0013)
+
+
 project(ccfx)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ".")
