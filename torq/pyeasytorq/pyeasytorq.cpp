@@ -1,5 +1,6 @@
-// pyeasytorq.cpp : DLL アプリケーションのエントリ ポイントを定義します。
+// pyeasytorq.cpp : DLL アプリケーションも､ｮエントリ ポイント�￥亭･豪`も､翌爭も､凵B
 //
+
 
 #include <cassert>
 #include <cstring> // strlen
@@ -7,6 +8,11 @@
 #include <vector>
 
 #include <Python.h>
+
+
+#if PY_MAJOR_VERSION >= 3
+  #error  "This code cannot be compiled under version 3 of python"
+#endif
 
 #include <boost/static_assert.hpp>
 
