@@ -10,7 +10,7 @@ The easiest way is to build it under Ubuntu linux: you need the following librar
 
 - libboost-dev 
 - libboost-thread-dev 
-- libpython3-all-dev
+- libpython2-all-dev
 - libicu-dev 
 - openjdk-7-jdk 
 
