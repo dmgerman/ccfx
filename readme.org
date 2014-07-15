@@ -1,27 +1,36 @@
 * CCFinder 
 
 This is my attempt to provide life support to ccfinder. I have
-collected its source code, and the great work that Nic
-Bettenburg documenting how to build it under Linux. 
+collected its source code, and the great work that Nic Bettenburg did
+documenting how to build it under Linux. It also fixes some
+configuration problems that have arisen since ccfx was first released.
 
 ** Requirements
 
 The easiest way is to build it under Ubuntu linux: you need the following libraries:
 
-- libboost-dev 
-- libboost-thread-dev 
+- libboost-all-dev 
 - libpython2-all-dev  (make sure you have version 2.7, it is incompatible with version 3)
 - libicu-dev 
 - openjdk-7-jdk 
 
 
-Now, make an offering to the make goods (good options are  Vishwakarma and Vulcan)
+** Building
+
+Now, make an offering to the make gods (good options are  Vishwakarma, Hephaestus, and Vulcan).
 
 Run 
 
-   cmake CMakeLists.txt 
+  export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64
+  cmake CMakeLists.txt 
+
+some warnings will appear, but hopefully it finishes to completion.
 
 and if succesful run:
+
+./ubuntu32/ccfx
+
+
 
 
 
