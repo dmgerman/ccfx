@@ -96,7 +96,8 @@ class CppPreprocessor(pp.Base):
     | +((r_case (id | l_bool | l_char | l_int) | r_default) colon) ((block scan ^) ?(null <- r_break semicolon) | (block <- (insert(LB) *(xcep(r_break | r_case | r_default) ^) insert(RB))) ?(null <- r_break semicolon)) // enclose each case clause by block
     | r_switch (block scan ^)
 """
-            simple_statement_removal_rule = "(null <- simple_statement) |"
+#            simple_statement_removal_rule = "(null <- simple_statement) |"
+            simple_statement_removal_rule = ""
         
         patternStr = """TEXT scan= 
     preq("&(a-z);") (
@@ -252,12 +253,8 @@ class CppPreprocessor(pp.Base):
     | (OG <- ">") // may mean greater than or template parameter
     | (ques <- "?") | (colon <- ":") | (dot <- ".");
 
-TEXT scan= (null <- macro_line | multiline_comment | singleline_comment | " " | "&t;" | "&f;" | "&bslash;" *(" " | "&t;") eol | eol)
-    | (r_int <- (r_intmax | r_intptr | r_int64 | r_int32 | r_int16))
-    | (r_int <- (r_uintmax | r_uintptr | r_uint64 | r_uint32 | r_uint16))
-    | (r_int <- m_wchar_t)
-    | (r_char <- r_int8)
-    | (r_char <- r_uint8);
+
+TEXT scan= (whitespace <- " "  | eol);
 
 TEXT scan= preq(r_operator) 
     (
@@ -373,7 +370,7 @@ TEXT scan= (simple_statement match (r_return | r_continue | r_break | r_throw) +
 // enclose class/method/function definition by block
 TEXT scan= (
         ?(null <- +(r_template template_param)) (
-            (null <- (r_class | r_struct | r_union) ?id (block match LB RB)) // remove empty structure definition
+            (def_struct <- (r_class | r_struct | r_union) ?id (block match LB RB)) // remove empty structure definition
             | (def_block <- r_class id (block scan ^))
             | (def_block <- (r_struct | r_union) ?id (block scan ^))
             | (null <- +(r_void | r_int | r_char | r_float | r_bool | r_class | r_struct | r_enum | r_union | r_const | r_volatile | op_star | op_amp | index | (id <- op_complement id) | ?r_typename id) insert(c_func) param ?r_const ?(null <- (r_throw param))
@@ -418,12 +415,17 @@ TEXT scan= (id | r_int | r_char | r_float | r_bool) id (param scan ^) *(comma id
         fmt.addflatten('index')
         fmt.addreplace('LK', '(braket')
         fmt.addreplace('RK', ')braket')
+        fmt.addreplace('macro_line', 'macro_line|%s')
+        fmt.addreplace('multiline_comment', 'multiline_comment|%s')
+        fmt.addreplace('singleline_comment', 'singleline_comment|%s')
         fmt.addterminate('macro_line')
+        fmt.addreplace('macro_line', 'macro_line|%s')
         fmt.addflatten('simple_statement')
         fmt.addreplace('semicolon', 'suffix:semicolon')
         fmt.addreplace('colon', 'suffix:colon')
         fmt.addformat('def_block', '(def_block', ')def_block')
         fmt.addflatten('value_list')
+        fmt.addnone('whitespace')
         self.fmt = fmt
     
     def getnormalizedoptionstring(self):
