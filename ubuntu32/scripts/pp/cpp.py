@@ -205,6 +205,7 @@ class CppPreprocessor(pp.Base):
             | +"&(0-9);" ("f" | "F") ? ("l" | "L")
     )
     | (l_int <- (("0x" | "0X") +("&(0-9);" | "&(a-f);" | "&(A-F);") | +"&(0-9);") *("u" | "l" | "U" | "L"))
+    | (mdefine_line <- "#define" *("&bslash;" *(" " | "&t;") eol | xcep(eol | eof | "/*" | "//") any | (multiline_comment <- "/*" *(xcep(eof | "*/") any) "*/")) preq(eol | eof | "//"))
     | (macro_line <- "#" *("&bslash;" *(" " | "&t;") eol | xcep(eol | eof | "/*" | "//") any | (multiline_comment <- "/*" *(xcep(eof | "*/") any) "*/")) preq(eol | eof | "//"))
     | (semicolon <- ";")
     | (comma <- ",") 
@@ -254,7 +255,7 @@ class CppPreprocessor(pp.Base):
     | (ques <- "?") | (colon <- ":") | (dot <- ".");
 
 
-TEXT scan= (whitespace <- " "  | eol);
+TEXT scan= (whitespace <- " " | "&t;" | eol);
 
 TEXT scan= preq(r_operator) 
     (
@@ -289,7 +290,6 @@ TEXT scan=
     | (l_bool <- r_true | r_false)
     | (l_string <- +l_string)
     | (null <- (r_private | r_public | r_protected) colon)
-    | (null <- r_virtual | r_inline | r_static)
     | (word <- op_scope_resolution word *(op_scope_resolution word) ?(op_scope_resolution op_complement word))
     | (word <- word +(op_scope_resolution word) ?(op_scope_resolution op_complement word))
     | (word <- word op_scope_resolution op_complement word);
@@ -298,7 +298,7 @@ TEXT scan= xcep(LB | RB | LP | RP | LK | RK) any
     | (block <- LB *^ RB) 
     | (null <- LP op_star) *^ (null <- RP) (op_member_access_from_pointer <- dot) 
     | (index <- LK *^ RK)
-    | (param <- (LP (null <- r_void) RP | LP *^ RP));
+    | (param <- (LP r_void RP | LP *^ RP));
 
 TEXT scan= xcep(OL | OG | block | param | semicolon) any | (template_param <- OL *^ OG) 
     | (block scan ^) | (param scan ^) | (index scan ^); // recurse into block and param
@@ -416,6 +416,7 @@ TEXT scan= (id | r_int | r_char | r_float | r_bool) id (param scan ^) *(comma id
         fmt.addreplace('LK', '(braket')
         fmt.addreplace('RK', ')braket')
         fmt.addreplace('macro_line', 'macro_line|%s')
+        fmt.addreplace('mdefine_line', 'mdefine_line|%s')
         fmt.addreplace('multiline_comment', 'multiline_comment|%s')
         fmt.addreplace('singleline_comment', 'singleline_comment|%s')
         fmt.addterminate('macro_line')
