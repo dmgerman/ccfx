@@ -312,7 +312,6 @@ TEXT scan= ?(null <- (word match "this" op_member_access_from_pointer))
 TEXT scan= op_assign (initialization_block <- preq(block)) (null <- block) semicolon
     | (r_class | r_struct) id (null <- colon *(r_public | r_private | r_protected | r_virtual) id *(comma *(r_public | r_private | r_protected | r_virtual) id))
     | (null <- r_enum ?id block)
-    | (null <- m_assert param semicolon)
     | r_return (param match (null <- LP) *(xcep(RP) any) (null <- RP)) semicolon
     | (block scan ^); // recurse into block
 
