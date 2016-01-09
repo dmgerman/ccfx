@@ -255,7 +255,7 @@ class CppPreprocessor(pp.Base):
     | (ques <- "?") | (colon <- ":") | (dot <- ".");
 
 
-TEXT scan= (whitespace <- " " | "&t;" | eol);
+TEXT scan= (whitespace <- " " |eol | "&t;" );
 
 TEXT scan= preq(r_operator) 
     (
@@ -315,8 +315,8 @@ TEXT scan= op_assign (initialization_block <- preq(block)) (null <- block) semic
     | r_return (param match (null <- LP) *(xcep(RP) any) (null <- RP)) semicolon
     | (block scan ^); // recurse into block
 
-TEXT scan= xcep(id | param | RK | l_float | l_int | block) any (null <- op_minus)
-    | (null <- r_struct | r_union | r_enum) id xcep(block | colon)
+TEXT scan= xcep(id | param | RK | l_float | l_int | block) any (op_minus)
+    | (r_struct | r_union | r_enum) id xcep(block | colon)
     | ques insert(c_cond) // insert tokens for control-flow complexity counter
     | (block scan ^) // recurse into block
     | (param scan ^) | (index scan ^); // recurse into expression
@@ -442,13 +442,17 @@ TEXT scan= (id | r_int | r_char | r_float | r_bool) id (param scan ^) *(comma id
         IDCOLONCOLON = "id|::"
         len_IDCOLONCOLON = len(IDCOLONCOLON)
         
+        # sourceCodeStrInUtf8 has the original code to parse
+        # and lines is the parsed returned string
         if self.pat == None:
             self.setoptions(None)
-        
+
         t = easytorq.Tree(sourceCodeStrInUtf8)
         
         self.pat.apply(t)
+        
         lines = self.fmt.format(t).split('\n')
+
         for li, line in enumerate(lines):
             if line:
                 fields = line.split('\t')
