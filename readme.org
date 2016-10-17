@@ -39,3 +39,7 @@ and if succesful run:
 
 
 
+
+* Suse
+
+- I had to replace one line of code with a simple for loop
